@@ -37,7 +37,6 @@ private:
 
 	FCollisionQueryParams TraceParams;
 
-
 	UFUNCTION()
 	void HandleHighLight();
 

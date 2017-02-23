@@ -24,15 +24,25 @@ public:
 	void OnInteract(AActor* Caller);
 	virtual void OnInteract_Implementation(AActor* Caller);
 
-	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void OnBeginFocus();
 
-	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void OnEndFocus();
+
+	/************************************************************************/
+	/* Top - down highlighting version TODO glimmer effect on object		*/
+	/************************************************************************/
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
 protected:
 
 private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USphereComponent* SphereCollision;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bCanInteract : 1;

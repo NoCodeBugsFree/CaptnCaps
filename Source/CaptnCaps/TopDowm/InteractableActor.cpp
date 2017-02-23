@@ -8,6 +8,14 @@ AInteractableActor::AInteractableActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bCanInteract = true;
+
+	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
+	SphereCollision->SetupAttachment(RootComponent);
+	SphereCollision->SetSphereRadius(250.f);
+
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AInteractableActor::OnOverlapBegin);
+	SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AInteractableActor::OnOverlapEnd);
+
 }
 
 void AInteractableActor::BeginPlay()
@@ -56,5 +64,24 @@ void AInteractableActor::OnEndFocus()
 	for (UMeshComponent* Mesh : Meshes)
 	{
 		Mesh->SetRenderCustomDepth(false);
+	}
+}
+
+void AInteractableActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	AMyPlayer* MyPlayer = Cast<AMyPlayer>(OtherActor);
+	if (MyPlayer)
+	{
+		OnBeginFocus();
+	}
+	
+}
+
+void AInteractableActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AMyPlayer* MyPlayer = Cast<AMyPlayer>(OtherActor);
+	if (MyPlayer)
+	{
+		OnEndFocus();
 	}
 }
