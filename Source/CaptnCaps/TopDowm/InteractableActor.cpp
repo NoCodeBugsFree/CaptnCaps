@@ -13,12 +13,14 @@ AInteractableActor::AInteractableActor()
 void AInteractableActor::BeginPlay()
 {
  	Super::BeginPlay();
+	// TODO test this in PostInitializeComponents or OnConstruction
  	for (auto Mesh : GetComponentsByClass(UMeshComponent::StaticClass()))
  	{
  		auto MeshToAdd = Cast<UMeshComponent>(Mesh);
  			if (MeshToAdd)
  			{
- 				Meshes.AddUnique(MeshToAdd);
+ 				Meshes.Push(MeshToAdd);
+				MeshToAdd->SetCustomDepthStencilValue(static_cast<int32>(Color));
  			}
  	}
 }
@@ -33,15 +35,19 @@ void AInteractableActor::OnInteract_Implementation(AActor* Caller)
  	AMyPlayer* MyPlayer = Cast<AMyPlayer>(Caller);
  	if (MyPlayer)
  	{
-		
+		UE_LOG(LogTemp, Error, TEXT("AInteractableActor::OnInteract_Implementation"));
+		Destroy();
  	}
 }
 
 void AInteractableActor::OnBeginFocus()
 {
-	for (UMeshComponent* Mesh : Meshes)
+	if (bCanInteract)
 	{
-		Mesh->SetRenderCustomDepth(true);
+		for (UMeshComponent* Mesh : Meshes)
+		{
+			Mesh->SetRenderCustomDepth(true);
+		}
 	}
 }
 

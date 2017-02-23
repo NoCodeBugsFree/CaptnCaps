@@ -7,15 +7,6 @@
 
 class AInteractableActor;
 
-// UENUM(BlueprintType, Blueprintable)
-// enum class EStencilColor : uint8
-// {
-// 	SC_Green = 250 UMETA(DisplayName = "Green"),
-// 	SC_Blue = 251 UMETA(DisplayName = "Blue"),
-// 	SC_Red = 252 UMETA(DisplayName = "Red"),
-// 	SC_Orange = 253 UMETA(DisplayName = "Orange"),
-// };
-
 UCLASS()
 class CAPTNCAPS_API AMyPlayer : public ACharacter
 {
@@ -37,6 +28,18 @@ public:
 	AInteractableActor* FindFocusedActor();
 
 private:
+
+	UPROPERTY()
+	AInteractableActor* FocusedActor;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float InteractionDistance = 300.f;
+
+	FCollisionQueryParams TraceParams;
+
+
+	UFUNCTION()
+	void HandleHighLight();
 
 	UFUNCTION()
 	void MoveForward(float Value);

@@ -24,21 +24,23 @@ public:
 	void OnInteract(AActor* Caller);
 	virtual void OnInteract_Implementation(AActor* Caller);
 
+	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void OnBeginFocus();
+
+	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void OnEndFocus();
 	
 protected:
 
-
-
 private:
-
-	UPROPERTY()
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bCanInteract : 1;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	TArray<UMeshComponent*> Meshes;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	EStencilColor Color = EStencilColor::SC_Blue;
 	
 };

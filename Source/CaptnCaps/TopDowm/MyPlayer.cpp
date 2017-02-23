@@ -10,6 +10,10 @@ AMyPlayer::AMyPlayer()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	TraceParams = FCollisionQueryParams(TEXT("TraceParams"), false, this);
+	TraceParams.bTraceComplex = false;
+	TraceParams.bTraceAsyncScene = false;
+	TraceParams.bReturnPhysicalMaterial = false;
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +28,11 @@ void AMyPlayer::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	// HighLight only for this particular player
+	if (Controller && Controller->IsLocalController())
+	{
+		HandleHighLight();
+	}
 }
 
 // Called to bind functionality to input
@@ -43,7 +52,61 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 AInteractableActor* AMyPlayer::FindFocusedActor()
 {
+	if (!Controller)
+	{
+		return nullptr;
+	}
+
+	FVector Location;
+	FRotator Rotation;
+	FHitResult Hit(ForceInit);
+
+	Controller->GetPlayerViewPoint(Location, Rotation);
+
+	FVector Start = Location;
+	FVector End = Start + GetActorForwardVector() * InteractionDistance;
+
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Camera, TraceParams);
+	
+	
+	if (Hit.bBlockingHit)
+	{
+		AInteractableActor* InteractableActor = Cast<AInteractableActor>(Hit.GetActor());
+		if (InteractableActor)
+		{
+			return InteractableActor;
+		}
+	}
+
 	return nullptr;
+}
+
+void AMyPlayer::HandleHighLight()
+{
+	AInteractableActor* NewHighLight = FindFocusedActor();
+
+	if (NewHighLight)
+	{
+		if (NewHighLight != FocusedActor)
+		{
+			if (FocusedActor)
+			{
+				FocusedActor->OnEndFocus();
+			}
+			
+			NewHighLight->OnBeginFocus();
+			FocusedActor = NewHighLight;
+		}
+	}
+	else
+	{
+		if (FocusedActor)
+		{
+			FocusedActor->OnEndFocus();
+		}
+		FocusedActor = nullptr;
+	}
+	
 }
 
 void AMyPlayer::MoveForward(float Value)
@@ -70,7 +133,10 @@ void AMyPlayer::LookYaw(float Value)
 
 void AMyPlayer::Use()
 {
-	UE_LOG(LogTemp, Error, TEXT("Your message"));
-	
+	AInteractableActor* InteractableActor = FindFocusedActor();
+	if (InteractableActor)
+	{
+		InteractableActor->OnInteract(this);
+	}
 }
 
