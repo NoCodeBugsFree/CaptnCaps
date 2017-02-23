@@ -103,6 +103,18 @@ void AMyPlayer::OnDeath()
 	Destroy();
 }
 
+void AMyPlayer::Heal(float Amount)
+{
+	if (Amount > 0)
+	{
+		HealthPoints += Amount;
+		if (HealthPoints > MaxHealthPoints)
+		{
+			HealthPoints = MaxHealthPoints;
+		}
+	}
+}
+
 void AMyPlayer::HandleHighLight()
 {
 	AInteractableActor* NewHighLight = FindFocusedActor();
@@ -155,6 +167,7 @@ void AMyPlayer::LookYaw(float Value)
 
 void AMyPlayer::Use()
 {
+	UE_LOG(LogTemp, Error, TEXT("Use()"));
 	AInteractableActor* InteractableActor = FindFocusedActor();
 	if (InteractableActor)
 	{

@@ -29,10 +29,14 @@ public:
 
 	void OnDeath();
 
+	void Heal(float Amount);
+
 private:
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float MaxHealthPoints = 100.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float HealthPoints;
 
 	/** This is a AActor::TakeDamage() overriding
