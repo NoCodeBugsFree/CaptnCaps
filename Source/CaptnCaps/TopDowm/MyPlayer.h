@@ -27,8 +27,19 @@ public:
 
 	AInteractableActor* FindFocusedActor();
 
+	void OnDeath();
+
 private:
 
+	float MaxHealthPoints = 100.f;
+
+	float HealthPoints;
+
+	/** This is a AActor::TakeDamage() overriding
+		APawn::TakeDamage - also exists
+	*/
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
 	UPROPERTY()
 	AInteractableActor* FocusedActor;
 	

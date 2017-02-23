@@ -1,17 +1,5 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
-//#ifndef __CAPTNCAPS_H__
-//#define __CAPTNCAPS_H__
-//
-//#include "EngineMinimal.h"
-//
-//DECLARE_LOG_CATEGORY_EXTERN(LogCaptnCaps, Log, All);
-//
-//
-//
-//
-//#endif
-
 #pragma once
 
 #include "Engine.h"

@@ -21,6 +21,7 @@ void AMyPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	HealthPoints = MaxHealthPoints;
 }
 
 // Called every frame
@@ -32,6 +33,7 @@ void AMyPlayer::Tick( float DeltaTime )
 	if (Controller && Controller->IsLocalController())
 	{
 		HandleHighLight();
+		GEngine->AddOnScreenDebugMessage(0, DeltaTime, FColor::Red, FString::Printf(TEXT("HP: %f"), HealthPoints));
 	}
 }
 
@@ -47,6 +49,20 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &AMyPlayer::Use);
 
+}
+
+float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	HealthPoints -= ActualDamage;
+
+	if (HealthPoints <= 0)
+	{
+		OnDeath();
+	}
+
+	return ActualDamage;
 }
 
 
@@ -79,6 +95,12 @@ AInteractableActor* AMyPlayer::FindFocusedActor()
 	}
 
 	return nullptr;
+}
+
+void AMyPlayer::OnDeath()
+{
+	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Red, FString::Printf(TEXT("You died!")));
+	Destroy();
 }
 
 void AMyPlayer::HandleHighLight()
