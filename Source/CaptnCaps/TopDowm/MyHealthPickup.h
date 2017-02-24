@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "TopDowm/InteractableActor.h"
+#include "PickupBase.h"
 #include "MyHealthPickup.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CAPTNCAPS_API AMyHealthPickup : public AInteractableActor
+class CAPTNCAPS_API AMyHealthPickup : public APickupBase
 {
 	GENERATED_BODY()
 
