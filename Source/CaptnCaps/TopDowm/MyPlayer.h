@@ -22,6 +22,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	void RotateCharacterTowardsMouseCursor();
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
@@ -31,7 +33,15 @@ public:
 
 	void Heal(float Amount);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "AAA")
+	void HUDUpdateHP();
+
+	void AddAmmo(int32 AmmoAmount, EAmmoType AmmoType);
+
 private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FPlayerInventory Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -51,6 +61,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float RunSpeed = 800.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bIsRunning : 1;
 
 
@@ -77,12 +88,6 @@ private:
 	void MoveRight(float Value);
 
 	UFUNCTION()
-	void LookPitch(float Value);
-
-	UFUNCTION()
-	void LookYaw(float Value);
-
-	UFUNCTION()
 	void Use();
 
 	UFUNCTION()
@@ -90,5 +95,11 @@ private:
 
 	UFUNCTION()
 	void StopRun();
+
+	UFUNCTION()
+	void LookPitch(float Value);
+
+	UFUNCTION()
+	void LookYaw(float Value);
 	
 };

@@ -3,6 +3,9 @@
 #include "CaptnCaps.h"
 #include "MyPlayer.h"
 #include "InteractableActor.h"
+#include "AssaultRifleBase.h"
+#include "LaserRifleBase.h"
+#include "RocketLauncherBase.h"
 
 // Sets default values
 AMyPlayer::AMyPlayer()
@@ -32,10 +35,10 @@ AMyPlayer::AMyPlayer()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
 	PlayerCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
-
+	bUseControllerRotationYaw = false;
 	
 	bIsRunning = false;
-
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +47,8 @@ void AMyPlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	HealthPoints = MaxHealthPoints;
+	
+	HUDUpdateHP();
 }
 
 // Called every frame
@@ -56,6 +61,20 @@ void AMyPlayer::Tick( float DeltaTime )
 	{
 		HandleHighLight();
 		GEngine->AddOnScreenDebugMessage(0, DeltaTime, FColor::Red, FString::Printf(TEXT("HP: %f"), HealthPoints));
+		
+		RotateCharacterTowardsMouseCursor();
+	}
+}
+
+void AMyPlayer::RotateCharacterTowardsMouseCursor()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController)
+	{
+		FVector WorldLocation, WorldDirection;
+		PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
+		FRotator NewRotation = WorldDirection.Rotation();
+		SetActorRotation(FRotator(0.f, NewRotation.Yaw, 0.f));
 	}
 }
 
@@ -66,13 +85,12 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	
 	InputComponent->BindAxis("MoveForward", this, &AMyPlayer::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AMyPlayer::MoveRight);
-	InputComponent->BindAxis("LookYaw", this, &AMyPlayer::LookYaw);
-	InputComponent->BindAxis("LookPitch", this, &AMyPlayer::LookPitch);
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &AMyPlayer::Use);
 	InputComponent->BindAction("Run", IE_Pressed, this, &AMyPlayer::StartRun);
 	InputComponent->BindAction("Run", IE_Released, this, &AMyPlayer::StopRun);
-
+	InputComponent->BindAxis("LookYaw", this, &AMyPlayer::LookYaw);
+	InputComponent->BindAxis("LookPitch", this, &AMyPlayer::LookPitch);
 }
 
 float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -80,7 +98,7 @@ float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
 	HealthPoints -= ActualDamage;
-
+	HUDUpdateHP();
 	if (HealthPoints <= 0)
 	{
 		OnDeath();
@@ -88,7 +106,6 @@ float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent
 
 	return ActualDamage;
 }
-
 
 AInteractableActor* AMyPlayer::FindFocusedActor()
 {
@@ -136,6 +153,40 @@ void AMyPlayer::Heal(float Amount)
 		{
 			HealthPoints = MaxHealthPoints;
 		}
+		HUDUpdateHP();
+	}
+}
+
+void AMyPlayer::AddAmmo(int32 AmmoAmount, EAmmoType AmmoType)
+{
+	switch (AmmoType)
+	{
+		case EAmmoType::AT_Bullets :
+		{
+			if (Inventory.AssaultRifle)
+			{
+				// Inventory.AssaultRifle->AddAmmo(AmmoAmount);
+			}
+			break;
+		}
+
+		case EAmmoType::SC_Lasers:
+		{
+			if (Inventory.LaserRifle)
+			{
+				// Inventory.LaserRifle->AddAmmo(AmmoAmount);
+			}
+			break;
+		}
+
+		case EAmmoType::SC_Rockets:
+		{
+			if (Inventory.RocketLauncher)
+			{
+				// Inventory.RocketLauncher->AddAmmo(AmmoAmount);
+			}
+			break;
+		}
 	}
 }
 
@@ -169,14 +220,16 @@ void AMyPlayer::HandleHighLight()
 
 void AMyPlayer::MoveForward(float Value)
 {
-	// FVector ForwardVector = GetActorForwardVector(); // FPS TPS
-	FVector ForwardVector(1.f, 0.f, 0.f);
+	// TODO correct clamp when MoveForward() and  MoveRight() functions called simultaneously
+	// FVector ForwardVector = GetActorForwardVector(); 
+	FVector ForwardVector(1.f, 0.f, 0.f); 
 	AddMovementInput(ForwardVector, Value);
 }
 
 void AMyPlayer::MoveRight(float Value)
 {
-	//FVector RightVector = GetActorRightVector();
+	// TODO correct clamp when MoveForward() and  MoveRight() functions called simultaneously
+	//FVector RightVector = GetActorRightVector(); // FPS TPS
 	FVector RightVector(0.f, 1.f, 0.f);
 	AddMovementInput(RightVector, Value);
 }
