@@ -34,10 +34,25 @@ public:
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* PlayerCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float MaxHealthPoints = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float HealthPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float WalkSpeed = 400.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float RunSpeed = 800.f;
+
+	uint32 bIsRunning : 1;
+
 
 	/** This is a AActor::TakeDamage() overriding
 		APawn::TakeDamage - also exists
@@ -69,5 +84,11 @@ private:
 
 	UFUNCTION()
 	void Use();
+
+	UFUNCTION()
+	void StartRun();
+
+	UFUNCTION()
+	void StopRun();
 	
 };

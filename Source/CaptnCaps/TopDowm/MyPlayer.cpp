@@ -14,6 +14,28 @@ AMyPlayer::AMyPlayer()
 	TraceParams.bTraceComplex = false;
 	TraceParams.bTraceAsyncScene = false;
 	TraceParams.bReturnPhysicalMaterial = false;
+
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 1000.f;
+
+	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when character does
+	CameraBoom->RelativeRotation = FRotator(-90.f, 0.f, 0.f);
+
+	CameraBoom->bUsePawnControlRotation = false;
+	CameraBoom->bInheritPitch = false;
+	CameraBoom->bInheritRoll = false;
+	CameraBoom->bInheritYaw = false;
+	CameraBoom->bDoCollisionTest = false;
+	CameraBoom->bEnableCameraLag = true;
+
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
+	PlayerCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+
+
+	
+	bIsRunning = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +70,8 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAxis("LookPitch", this, &AMyPlayer::LookPitch);
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &AMyPlayer::Use);
+	InputComponent->BindAction("Run", IE_Pressed, this, &AMyPlayer::StartRun);
+	InputComponent->BindAction("Run", IE_Released, this, &AMyPlayer::StopRun);
 
 }
 
@@ -145,13 +169,15 @@ void AMyPlayer::HandleHighLight()
 
 void AMyPlayer::MoveForward(float Value)
 {
-	FVector ForwardVector = GetActorForwardVector();
+	// FVector ForwardVector = GetActorForwardVector(); // FPS TPS
+	FVector ForwardVector(1.f, 0.f, 0.f);
 	AddMovementInput(ForwardVector, Value);
 }
 
 void AMyPlayer::MoveRight(float Value)
 {
-	FVector RightVector = GetActorRightVector();
+	//FVector RightVector = GetActorRightVector();
+	FVector RightVector(0.f, 1.f, 0.f);
 	AddMovementInput(RightVector, Value);
 }
 
@@ -167,11 +193,22 @@ void AMyPlayer::LookYaw(float Value)
 
 void AMyPlayer::Use()
 {
-	UE_LOG(LogTemp, Error, TEXT("Use()"));
 	AInteractableActor* InteractableActor = FindFocusedActor();
 	if (InteractableActor)
 	{
 		InteractableActor->OnInteract(this);
 	}
+}
+
+void AMyPlayer::StartRun()
+{
+	bIsRunning = true;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void AMyPlayer::StopRun()
+{
+	bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
