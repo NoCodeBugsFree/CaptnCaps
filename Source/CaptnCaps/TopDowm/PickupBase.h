@@ -19,7 +19,7 @@ public:
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
-
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AAA")
 	void OnInteract(AActor* Caller);
 	virtual void OnInteract_Implementation(AActor* Caller);

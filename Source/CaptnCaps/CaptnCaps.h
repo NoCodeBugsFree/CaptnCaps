@@ -2,6 +2,9 @@
 
 #pragma once
 
+// after creating and setting a new Trace Channel in projects settings
+#define ECC_Weapon ECC_GameTraceChannel1
+
 #include "Engine.h"
 #include "CaptnCaps.generated.h"
 

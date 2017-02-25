@@ -40,9 +40,13 @@ public:
 
 	void AddToInventory(class AWeaponBase* NewWeapon);
 
+	void StartFire();
+
+	void StopFire();
+
 private:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FPlayerInventory Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))

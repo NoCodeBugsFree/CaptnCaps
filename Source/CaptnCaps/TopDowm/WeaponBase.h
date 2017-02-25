@@ -15,17 +15,24 @@ class CAPTNCAPS_API AWeaponBase : public APickupBase
 	
 public:
 
+	AWeaponBase();
+
+	virtual void BeginPlay() override;
+
 	void AddAmmo(int32 Amount);
 
-	void DealDamage();
+	void DealDamage(const FHitResult& Hit);
 
-	void Fire();
+	void StartFire();
+	void StopFire();
+
+	virtual void DoFire();
 
 	FVector CalcSpread();
 
 	void SpawnFireEffect();
 
-	void SpawnImpactEffect();
+	void SpawnImpactEffect(const FHitResult& Hit);
 
 	virtual void OnInteract_Implementation(AActor* Caller) override;
 
@@ -43,22 +50,36 @@ protected:
 	EAmmoType AmmoType = EAmmoType::AT_Bullets;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	int32 MaxAmmo;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	int32 CurrentAmmo;
+	int32 MaxAmmo = 30;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	float Spread;
+	int32 CurrentAmmo = 10;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	float BaseDamage;
+	float Spread = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float BaseDamage = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bIsUseProjectile : 1;
 
 	UPROPERTY(meta = (EditCondition = "bIsUseProjectile", AllowPrivateAccess = "true"), EditDefaultsOnly, BlueprintReadOnly, Category = "AAA")
 	TSubclassOf<class AProjectileBase> Projectile;
+
+	FCollisionQueryParams TraceParams;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float FireRate = 600.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float MaxRange = 10000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FTimerHandle FireRateHandle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FName MuzzleSocketName = "Muzzle";
 
 private:	
 	  

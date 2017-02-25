@@ -90,6 +90,9 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAction("Use", IE_Pressed, this, &AMyPlayer::Use);
 	InputComponent->BindAction("Run", IE_Pressed, this, &AMyPlayer::StartRun);
 	InputComponent->BindAction("Run", IE_Released, this, &AMyPlayer::StopRun);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &AMyPlayer::StartFire);
+	InputComponent->BindAction("Fire", IE_Released, this, &AMyPlayer::StopFire);
+
 	InputComponent->BindAxis("LookYaw", this, &AMyPlayer::LookYaw);
 	InputComponent->BindAxis("LookPitch", this, &AMyPlayer::LookPitch);
 }
@@ -248,6 +251,22 @@ void AMyPlayer::LookYaw(float Value)
 void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
 {
 	
+}
+
+void AMyPlayer::StartFire()
+{
+	if (Inventory.CurrentWeapon)
+	{
+		Inventory.CurrentWeapon->StartFire();
+	}
+}
+
+void AMyPlayer::StopFire()
+{
+	if (Inventory.CurrentWeapon)
+	{
+		Inventory.CurrentWeapon->StopFire();
+	}
 }
 
 void AMyPlayer::Use()
