@@ -38,6 +38,8 @@ public:
 
 	void AddAmmo(int32 AmmoAmount, EAmmoType AmmoType);
 
+	void AddToInventory(class AWeaponBase* NewWeapon);
+
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
@@ -101,5 +103,8 @@ private:
 
 	UFUNCTION()
 	void LookYaw(float Value);
+	
+public:
+
 	
 };

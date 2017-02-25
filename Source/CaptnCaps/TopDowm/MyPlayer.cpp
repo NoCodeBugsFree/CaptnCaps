@@ -6,6 +6,7 @@
 #include "AssaultRifleBase.h"
 #include "LaserRifleBase.h"
 #include "RocketLauncherBase.h"
+#include "WeaponBase.h"
 
 // Sets default values
 AMyPlayer::AMyPlayer()
@@ -165,7 +166,7 @@ void AMyPlayer::AddAmmo(int32 AmmoAmount, EAmmoType AmmoType)
 		{
 			if (Inventory.AssaultRifle)
 			{
-				// Inventory.AssaultRifle->AddAmmo(AmmoAmount);
+				Inventory.AssaultRifle->AddAmmo(AmmoAmount);
 			}
 			break;
 		}
@@ -174,7 +175,7 @@ void AMyPlayer::AddAmmo(int32 AmmoAmount, EAmmoType AmmoType)
 		{
 			if (Inventory.LaserRifle)
 			{
-				// Inventory.LaserRifle->AddAmmo(AmmoAmount);
+				Inventory.LaserRifle->AddAmmo(AmmoAmount);
 			}
 			break;
 		}
@@ -183,7 +184,7 @@ void AMyPlayer::AddAmmo(int32 AmmoAmount, EAmmoType AmmoType)
 		{
 			if (Inventory.RocketLauncher)
 			{
-				// Inventory.RocketLauncher->AddAmmo(AmmoAmount);
+				Inventory.RocketLauncher->AddAmmo(AmmoAmount);
 			}
 			break;
 		}
@@ -242,6 +243,11 @@ void AMyPlayer::LookPitch(float Value)
 void AMyPlayer::LookYaw(float Value)
 {
 	AddControllerYawInput(Value);
+}
+
+void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
+{
+	
 }
 
 void AMyPlayer::Use()

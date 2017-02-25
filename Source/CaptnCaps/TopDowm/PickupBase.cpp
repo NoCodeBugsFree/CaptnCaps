@@ -20,6 +20,8 @@ APickupBase::APickupBase()
 	
 
 	bIsTouchInteracts = true;
+	bCanInteract = true;
+	
 }
 
 // Called when the game starts or when spawned
