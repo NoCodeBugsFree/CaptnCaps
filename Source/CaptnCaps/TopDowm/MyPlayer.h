@@ -40,11 +40,25 @@ public:
 
 	void AddToInventory(class AWeaponBase* NewWeapon);
 
+	void EquipWeapon(class AWeaponBase* WeaponToEquip);
+
+	void SwitchToAssault();
+
+	void SwitchToLaser();
+
+	void SwitchToRocket();
+
 	void StartFire();
 
 	void StopFire();
-
+	
 private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FName WeaponSocketName = "Weapon";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	uint32 bEquipNewWeapon : 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FPlayerInventory Inventory;

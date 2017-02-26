@@ -26,7 +26,19 @@ void AWeaponBase::AddAmmo(int32 Amount)
 
 void AWeaponBase::DealDamage(const FHitResult& Hit)
 {
+	if (Hit.GetActor())
+	{
+		float DealtDamage = BaseDamage;
+		FVector ShotDirection = GetActorLocation() - Hit.ImpactPoint;
 
+		FPointDamageEvent DamageEvent;
+		DamageEvent.Damage = DealtDamage;
+		DamageEvent.HitInfo = Hit;
+		DamageEvent.ShotDirection = ShotDirection;
+		DamageEvent.ShotDirection.Normalize();
+
+		Hit.GetActor()->TakeDamage(DealtDamage, DamageEvent, OwningPlayer->GetController(), this);
+	}
 }
 
 void AWeaponBase::StartFire()
@@ -118,12 +130,40 @@ FVector AWeaponBase::CalcSpread()
 
 void AWeaponBase::SpawnFireEffect()
 {
-	// TODO
+	FVector FireEffecLocation;
+	FRotator FireEffecRotation;
+	if (WeaponMesh)
+	{
+		FireEffecLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
+		FireEffecRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+
+		if (MuzzleFireEffect)
+		{
+			UGameplayStatics::SpawnEmitterAttached(MuzzleFireEffect, WeaponMesh, MuzzleSocketName,
+				FireEffecLocation, FireEffecRotation, EAttachLocation::KeepWorldPosition, true);
+		}
+		if (MuzzleFireEffectSound)
+		{
+			UGameplayStatics::SpawnSoundAttached(MuzzleFireEffectSound, WeaponMesh, MuzzleSocketName, FireEffecLocation,
+				EAttachLocation::KeepWorldPosition, true, 1, 1, 0);
+		}
+	}
 }
 
 void AWeaponBase::SpawnImpactEffect(const FHitResult& Hit)
 {
-	// TODO
+	FVector ImpactLocation = Hit.ImpactPoint;
+	FRotator ImpactRotation = Hit.ImpactNormal.Rotation();
+
+	if (ImpactFireEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactFireEffect, ImpactLocation, ImpactRotation, true);
+	}
+
+	if (ImpactFireEffectSound)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactFireEffectSound, ImpactLocation, ImpactRotation);
+	}
 }
 
 void AWeaponBase::OnInteract_Implementation(AActor* Caller)

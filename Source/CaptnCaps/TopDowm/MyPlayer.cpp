@@ -93,6 +93,10 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAction("Fire", IE_Pressed, this, &AMyPlayer::StartFire);
 	InputComponent->BindAction("Fire", IE_Released, this, &AMyPlayer::StopFire);
 
+	InputComponent->BindAction("SwitchToAssault", IE_Pressed, this, &AMyPlayer::SwitchToAssault);
+	InputComponent->BindAction("SwitchToLaser", IE_Pressed, this, &AMyPlayer::SwitchToLaser);
+	InputComponent->BindAction("SwitchToRocket", IE_Pressed, this, &AMyPlayer::SwitchToRocket);
+
 	InputComponent->BindAxis("LookYaw", this, &AMyPlayer::LookYaw);
 	InputComponent->BindAxis("LookPitch", this, &AMyPlayer::LookPitch);
 }
@@ -250,7 +254,105 @@ void AMyPlayer::LookYaw(float Value)
 
 void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
 {
+	if (NewWeapon)
+	{
+		NewWeapon->SetCanInteract(false);
+		NewWeapon->SetActorEnableCollision(false);
+		NewWeapon->ChangeOwner(this);
+		NewWeapon->AttachToActor(this, FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocketName);
+
+		if ( NewWeapon->IsA(AAssaultRifleBase::StaticClass()) )
+		{
+			if (Inventory.AssaultRifle)
+			{
+				Inventory.AssaultRifle->Destroy();
+			}
+			Inventory.AssaultRifle = Cast<AAssaultRifleBase>(NewWeapon);
+
+			if ( ! Inventory.CurrentWeapon || bEquipNewWeapon)
+			{
+				EquipWeapon(Inventory.AssaultRifle);
+			}
+		}
+		else if ( NewWeapon->IsA(ALaserRifleBase::StaticClass()) )
+		{
+			if (Inventory.LaserRifle)
+			{
+				Inventory.LaserRifle->Destroy();
+			}
+			Inventory.LaserRifle = Cast<ALaserRifleBase>(NewWeapon);
+
+			if (!Inventory.CurrentWeapon || bEquipNewWeapon)
+			{
+				EquipWeapon(Inventory.LaserRifle);
+			}
+		} 
+		else if (NewWeapon->IsA(ARocketLauncherBase::StaticClass()))
+		{
+			if (Inventory.RocketLauncher)
+			{
+				Inventory.RocketLauncher->Destroy();
+			}
+			Inventory.RocketLauncher = Cast<ARocketLauncherBase>(NewWeapon);
+
+			if (!Inventory.CurrentWeapon || bEquipNewWeapon)
+			{
+				EquipWeapon(Inventory.RocketLauncher);
+			}
+		}
+	}
+}
+
+void AMyPlayer::EquipWeapon(class AWeaponBase* WeaponToEquip)
+{
+	if (WeaponToEquip == Inventory.CurrentWeapon)
+	{
+		return;
+	} 
 	
+	if (Inventory.CurrentWeapon)
+	{
+		Inventory.CurrentWeapon->SetActorHiddenInGame(true);
+	}
+
+	if (WeaponToEquip == Inventory.AssaultRifle)
+	{
+		Inventory.CurrentWeapon = Inventory.AssaultRifle;
+	} 
+	else if(WeaponToEquip == Inventory.LaserRifle)
+	{
+		Inventory.CurrentWeapon = Inventory.LaserRifle;
+	}
+	else if (WeaponToEquip == Inventory.RocketLauncher)
+	{
+		Inventory.CurrentWeapon = Inventory.LaserRifle;
+	}
+
+	Inventory.CurrentWeapon->SetActorHiddenInGame(false);
+}
+
+void AMyPlayer::SwitchToAssault()
+{
+	if (Inventory.AssaultRifle)
+	{
+		EquipWeapon(Inventory.AssaultRifle);
+	}
+}
+
+void AMyPlayer::SwitchToLaser()
+{
+	if (Inventory.LaserRifle)
+	{
+		EquipWeapon(Inventory.LaserRifle);
+	}
+}
+
+void AMyPlayer::SwitchToRocket()
+{
+	if (Inventory.RocketLauncher)
+	{
+		EquipWeapon(Inventory.RocketLauncher);
+	}
 }
 
 void AMyPlayer::StartFire()

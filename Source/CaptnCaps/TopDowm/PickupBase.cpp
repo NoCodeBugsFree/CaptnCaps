@@ -49,6 +49,14 @@ void APickupBase::OnInteract_Implementation(AActor* Caller)
 
 void APickupBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	OnInteract(OtherActor);
+	if (bCanInteract)
+	{
+		OnInteract(OtherActor);
+	}
+}
+
+void APickupBase::SetCanInteract(bool NewInteract)
+{
+	bCanInteract = NewInteract;
 }
 

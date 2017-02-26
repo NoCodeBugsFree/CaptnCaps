@@ -36,6 +36,7 @@ public:
 
 	virtual void OnInteract_Implementation(AActor* Caller) override;
 
+	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void ChangeOwner(AActor* NewOwner);
 
 protected:
@@ -80,6 +81,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FName MuzzleSocketName = "Muzzle";
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* MuzzleFireEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* ImpactFireEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USoundBase* MuzzleFireEffectSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USoundBase* ImpactFireEffectSound;
 
 private:	
 	  
