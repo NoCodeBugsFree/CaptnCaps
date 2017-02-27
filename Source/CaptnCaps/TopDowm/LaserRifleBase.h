@@ -13,7 +13,19 @@ class CAPTNCAPS_API ALaserRifleBase : public AWeaponBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	virtual void Tick(float DeltaSeconds) override;
+
+protected:
+
+
+
+private:
 	
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float RechargeAmount = 5.f;
+
+	float Charge;
 	
 };

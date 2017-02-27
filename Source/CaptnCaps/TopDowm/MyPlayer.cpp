@@ -260,6 +260,7 @@ void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
 		NewWeapon->SetActorEnableCollision(false);
 		NewWeapon->ChangeOwner(this);
 		NewWeapon->AttachToActor(this, FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocketName);
+		NewWeapon->SetActorHiddenInGame(true);
 
 		if ( NewWeapon->IsA(AAssaultRifleBase::StaticClass()) )
 		{
@@ -325,7 +326,7 @@ void AMyPlayer::EquipWeapon(class AWeaponBase* WeaponToEquip)
 	}
 	else if (WeaponToEquip == Inventory.RocketLauncher)
 	{
-		Inventory.CurrentWeapon = Inventory.LaserRifle;
+		Inventory.CurrentWeapon = Inventory.RocketLauncher;
 	}
 
 	Inventory.CurrentWeapon->SetActorHiddenInGame(false);

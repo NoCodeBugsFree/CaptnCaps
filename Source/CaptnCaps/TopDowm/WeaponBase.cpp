@@ -45,6 +45,7 @@ void AWeaponBase::StartFire()
 {
 	if (CurrentAmmo > 0)
 	{
+		bIsFiring = true;
 		DoFire();
 		float TimerDelay = FireRate > 0 ? 1 / (FireRate * 0.01667) : FApp::GetDeltaTime(); // GetWorld()->DeltaTimeSeconds
 
@@ -65,6 +66,7 @@ void AWeaponBase::StartFire()
 
 void AWeaponBase::StopFire()
 {
+	bIsFiring = false;
 	auto World = GetWorld();
 	if (World)
 	{
@@ -80,10 +82,6 @@ void AWeaponBase::DoFire()
 	if (WeaponMesh)
 	{
 		Start = WeaponMesh->GetSocketLocation(MuzzleSocketName);
-	}
-	else
-	{
-		Start = GetActorLocation();
 	}
 	
 	FVector End = Start + CalcSpread() * MaxRange;
@@ -101,7 +99,7 @@ void AWeaponBase::DoFire()
 
 	if (Hit.GetActor())
 	{
-		UE_LOG(LogTemp, Error, TEXT("You Hit %s!"), *Hit.GetActor()->GetName());
+		//UE_LOG(LogTemp, Error, TEXT("You Hit %s!"), *Hit.GetActor()->GetName());
 		DealDamage(Hit);
 		SpawnImpactEffect(Hit);
 	}
@@ -183,4 +181,10 @@ void AWeaponBase::ChangeOwner(AActor* NewOwner)
 		OwningPlayer = MyPlayer;
 	}
 	SetOwner(NewOwner);
+}
+
+void AWeaponBase::GetAmmo(int32& Current, int32& Max) const
+{
+	Current = CurrentAmmo;
+	Max = MaxAmmo;
 }

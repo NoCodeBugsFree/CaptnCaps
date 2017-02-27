@@ -39,7 +39,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void ChangeOwner(AActor* NewOwner);
 
+	UFUNCTION(BlueprintPure, Category = "AAA")
+	void GetAmmo(int32& Current, int32& Max) const;
+
+	bool IsAmmoFull()const { return MaxAmmo == CurrentAmmo; }
+
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	uint32 bIsFiring : 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	class AMyPlayer* OwningPlayer;

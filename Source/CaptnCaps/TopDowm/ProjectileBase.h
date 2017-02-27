@@ -18,8 +18,42 @@ public:
 	virtual void BeginPlay() override;
 	
 	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
+	virtual void Tick(float DeltaTime) override;
 
+	void Trace(float DeltaTime);
+
+	void DealDamage(const FHitResult& Hit);
+
+	void SpawnImpactEffect(const FHitResult& Hit);
+
+	void Initialize(FVector Direction);
+
+	void Move(float DeltaTime);
+
+protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* ProjectileMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* ProjectileParticles;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FVector Velocity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float InitialSpeed = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* ImpactFireEffect;
 	
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USoundBase* ImpactFireEffectSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	FRadialDamageParams RadialDamageParams;
+
+	FCollisionQueryParams TraceParams;
+
+
 };

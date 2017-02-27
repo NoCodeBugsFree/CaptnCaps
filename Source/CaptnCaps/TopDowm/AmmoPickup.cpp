@@ -11,4 +11,5 @@ void AAmmoPickup::OnInteract_Implementation(AActor* Caller)
 	{
 		MyPlayer->AddAmmo(AmmoAmount, AmmoType);
 	}
+	Destroy();
 }
