@@ -38,7 +38,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* ProjectileParticles;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FVector Velocity;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
@@ -54,6 +53,5 @@ protected:
 	FRadialDamageParams RadialDamageParams;
 
 	FCollisionQueryParams TraceParams;
-
-
+	
 };

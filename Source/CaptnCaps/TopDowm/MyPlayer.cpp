@@ -103,7 +103,28 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float ActualDamage = 0.f; // = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
+	{
+		ActualDamage = DamageAmount;
+	}
+ 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+ 	{
+ 		const FRadialDamageEvent& RadialDamageEvent = *(FRadialDamageEvent*)&DamageEvent;
+		
+		float MinDamage = RadialDamageEvent.Params.MinimumDamage;
+		float MaxDamage  = RadialDamageEvent.Params.BaseDamage;
+		float Distance = (GetActorLocation() - RadialDamageEvent.Origin).Size();
+		 
+		float LerpConst = Distance / RadialDamageEvent.Params.OuterRadius;
+		ActualDamage = FMath::Lerp(MaxDamage, MinDamage, LerpConst);
+ 	}
+	else
+	{
+		ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	}
+
 	
 	HealthPoints -= ActualDamage;
 	HUDUpdateHP();
@@ -259,7 +280,7 @@ void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
 		NewWeapon->SetCanInteract(false);
 		NewWeapon->SetActorEnableCollision(false);
 		NewWeapon->ChangeOwner(this);
-		NewWeapon->AttachToActor(this, FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocketName);
+		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 		NewWeapon->SetActorHiddenInGame(true);
 
 		if ( NewWeapon->IsA(AAssaultRifleBase::StaticClass()) )

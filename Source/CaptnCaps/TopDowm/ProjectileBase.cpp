@@ -3,7 +3,6 @@
 #include "CaptnCaps.h"
 #include "ProjectileBase.h"
 
-
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
@@ -60,7 +59,7 @@ void AProjectileBase::DealDamage(const FHitResult& Hit)
 	FVector End = Start + FVector(0, 0, 1);
 	
 	
-	GetWorld()->SweepMultiByChannel(Hits, Start, End, FQuat::Identity, ECC_Visibility,
+	GetWorld()->SweepMultiByChannel(Hits, Start, End, FQuat::Identity, ECC_Weapon,
 		FCollisionShape::MakeSphere(RadialDamageParams.OuterRadius), TraceParams);
 
 	FRadialDamageEvent RadialDamageEvent;
@@ -70,7 +69,10 @@ void AProjectileBase::DealDamage(const FHitResult& Hit)
 
 	for (const FHitResult& NewHit : Hits)
 	{
-		NewHit.GetActor()->TakeDamage(RadialDamageParams.BaseDamage, RadialDamageEvent, Instigator->GetController(), this);
+		if (NewHit.GetActor())
+		{
+			NewHit.GetActor()->TakeDamage(RadialDamageParams.BaseDamage, RadialDamageEvent, Instigator->GetController(), this);
+		}
 	}
 }
 

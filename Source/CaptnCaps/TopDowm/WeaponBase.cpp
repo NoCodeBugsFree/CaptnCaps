@@ -90,7 +90,7 @@ void AWeaponBase::DoFire()
 	if (World)
 	{
 		World->LineTraceSingleByChannel(Hit, Start, End, ECC_Weapon, TraceParams);
-		DrawDebugLine(World, Start, End, FColor::Red, false, 15.f, 0, 2.f);
+		//DrawDebugLine(World, Start, End, FColor::Red, false, 15.f, 0, 2.f);
 	}
 	
 	CurrentAmmo--;

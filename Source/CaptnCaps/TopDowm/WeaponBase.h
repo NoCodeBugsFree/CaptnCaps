@@ -67,21 +67,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float Spread = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true", EditCondition = "!bIsUseProjectile"))
 	float BaseDamage = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bIsUseProjectile : 1;
 
 	UPROPERTY(meta = (EditCondition = "bIsUseProjectile", AllowPrivateAccess = "true"), EditDefaultsOnly, BlueprintReadOnly, Category = "AAA")
-	TSubclassOf<class AProjectileBase> Projectile;
+	TSubclassOf<class AProjectileBase> ProjectileClass;
 
 	FCollisionQueryParams TraceParams;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float FireRate = 600.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true", EditCondition = "!bIsUseProjectile"))
 	float MaxRange = 10000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
@@ -93,13 +93,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* MuzzleFireEffect;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true", EditCondition = "!bIsUseProjectile"))
 	UParticleSystem* ImpactFireEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	USoundBase* MuzzleFireEffectSound;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true", EditCondition = "!bIsUseProjectile"))
 	USoundBase* ImpactFireEffectSound;
 
 private:	

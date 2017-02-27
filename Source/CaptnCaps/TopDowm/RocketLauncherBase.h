@@ -13,7 +13,17 @@ class CAPTNCAPS_API ARocketLauncherBase : public AWeaponBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	virtual void DoFire() override;
 	
+protected:
+
+
+
+private:
+
+
 	
 	
 };
