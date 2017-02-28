@@ -24,6 +24,7 @@ public:
 	void DealDamage(const FHitResult& Hit);
 
 	void StartFire();
+
 	void StopFire();
 
 	virtual void DoFire();
@@ -42,7 +43,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AAA")
 	void GetAmmo(int32& Current, int32& Max) const;
 
-	bool IsAmmoFull()const { return MaxAmmo == CurrentAmmo; }
+	bool IsAmmoFull() const { return MaxAmmo == CurrentAmmo; }
+
+	FORCEINLINE int32 GetCurrentAmmo() const { return CurrentAmmo; }
+
+	void SetAmmo(int32 Ammo);
+
+	bool bSpawnFull = true;
 
 protected:
 

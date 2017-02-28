@@ -6,6 +6,7 @@
 #include "MyPlayer.generated.h"
 
 class AInteractableActor;
+struct FSaveGameStruct;
 
 UCLASS()
 class CAPTNCAPS_API AMyPlayer : public ACharacter
@@ -51,6 +52,12 @@ public:
 	void StartFire();
 
 	void StopFire();
+
+	void SetDataFromSave(const FSaveGameStruct& SaveData);
+
+	FSaveGameStruct GetDataForSave();
+
+	void SpawnInventory(const FSaveGameStruct& SaveData);
 
 	void SetHasKey(bool NewHasKey) { bHasKey = NewHasKey; }
 

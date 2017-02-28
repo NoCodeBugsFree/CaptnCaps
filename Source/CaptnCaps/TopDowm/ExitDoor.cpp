@@ -3,7 +3,8 @@
 #include "CaptnCaps.h"
 #include "ExitDoor.h"
 #include "MyPlayer.h"
-
+#include "TopDownSaveGame.h"
+#include "TopDownGameInstance.h"
 
 // Sets default values
 AExitDoor::AExitDoor()
@@ -50,10 +51,11 @@ void AExitDoor::Tick( float DeltaTime )
 
 void AExitDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OverlappedComponent == OpenTrigger)
+	AMyPlayer* MyPlayer = Cast<AMyPlayer>(OtherActor);
+
+	if (OverlappedComponent == OpenTrigger && MyPlayer)
 	{
-		AMyPlayer* MyPlayer = Cast<AMyPlayer>(OtherActor);
-		if (MyPlayer && MyPlayer->IsPlayerHasKey())
+		if (MyPlayer->IsPlayerHasKey())
 		{
 			MyPlayer->SetHasKey(false);
 			NewLocation = GetActorLocation() + FVector(0.f, 0.f, 200.f);
@@ -61,8 +63,23 @@ void AExitDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 			SetActorTickEnabled(true);
 		}
 	}
-	else if (OverlappedComponent == LoadTrigger)
+	else if (OverlappedComponent == LoadTrigger && MyPlayer)
 	{
+		UTopDownSaveGame* TopDownSaveGame = UTopDownSaveGame::CreateSaveGameInstance();
+
+		TopDownSaveGame->SaveInfo = MyPlayer->GetDataForSave();
+
+		LevelToLoadName.ToString(TopDownSaveGame->SaveInfo.Level);
+
+		TopDownSaveGame->Save();
+
+		UTopDownGameInstance* TopDownGameInstance = Cast<UTopDownGameInstance>(GetGameInstance());
+		if (TopDownGameInstance)
+		{
+			TopDownGameInstance->bShouldLoadSave = true;
+			TopDownGameInstance->LastSaveLoaded = "Autosave";
+		}
+
 		UGameplayStatics::OpenLevel(this, LevelToLoadName, false);
 	}
 }

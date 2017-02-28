@@ -7,6 +7,8 @@
 #include "LaserRifleBase.h"
 #include "RocketLauncherBase.h"
 #include "WeaponBase.h"
+#include "TopDownSaveGame.h"
+#include "TopDownGameInstance.h"
 
 // Sets default values
 AMyPlayer::AMyPlayer()
@@ -46,8 +48,20 @@ AMyPlayer::AMyPlayer()
 void AMyPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UTopDownGameInstance* TopDownGameInstance = Cast<UTopDownGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (TopDownGameInstance && TopDownGameInstance->bShouldLoadSave)
+	{
+		TopDownGameInstance->bShouldLoadSave = false;
+		UTopDownSaveGame* TopDownSaveGame = UTopDownSaveGame::CreateSaveGameInstance();
+		TopDownSaveGame = TopDownSaveGame->Load(TopDownGameInstance->LastSaveLoaded, 0);
+		SetDataFromSave(TopDownSaveGame->SaveInfo);
+	}
+	else
+	{
+		HealthPoints = MaxHealthPoints;
+	}
 	
-	HealthPoints = MaxHealthPoints;
 	
 	HUDUpdateHP();
 }
@@ -105,12 +119,8 @@ void AMyPlayer::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage = 0.f; // = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
-	{
-		ActualDamage = DamageAmount;
-	}
- 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+	
+ 	if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
  	{
  		const FRadialDamageEvent& RadialDamageEvent = *(FRadialDamageEvent*)&DamageEvent;
 		
@@ -123,7 +133,8 @@ float AMyPlayer::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent
  	}
 	else
 	{
-		ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+		ActualDamage = DamageAmount;
+		//ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 
 	
@@ -392,6 +403,89 @@ void AMyPlayer::StopFire()
 	{
 		Inventory.CurrentWeapon->StopFire();
 	}
+}
+
+void AMyPlayer::SetDataFromSave(const FSaveGameStruct& SaveData)
+{
+	HealthPoints = SaveData.Health;
+
+	// TODO Separate Function?
+	if (SaveData.AssaultRifle.WeaponClass)
+	{
+		AWeaponBase* AssaultRifle = GetWorld()->SpawnActor<AWeaponBase>(SaveData.AssaultRifle.WeaponClass);
+		if (AssaultRifle)
+		{
+			AssaultRifle->bSpawnFull = false;
+			AssaultRifle->SetAmmo(SaveData.AssaultRifle.Ammo);
+			AddToInventory(AssaultRifle);
+		}
+	}
+
+	if (SaveData.LaserRifle.WeaponClass)
+	{
+		AWeaponBase* LaserRifle = GetWorld()->SpawnActor<AWeaponBase>(SaveData.LaserRifle.WeaponClass);
+		if (LaserRifle)
+		{
+			LaserRifle->bSpawnFull = false;
+			LaserRifle->SetAmmo(SaveData.AssaultRifle.Ammo);
+			AddToInventory(LaserRifle);
+		}
+	}
+
+	if (SaveData.RocketLauncher.WeaponClass)
+	{
+		AWeaponBase* RocketLauncher = GetWorld()->SpawnActor<AWeaponBase>(SaveData.RocketLauncher.WeaponClass);
+		if (RocketLauncher)
+		{
+			RocketLauncher->bSpawnFull = false;
+			RocketLauncher->SetAmmo(SaveData.AssaultRifle.Ammo);
+			AddToInventory(RocketLauncher);
+		}
+	}
+
+	switch (SaveData.CurrentWeapon)
+	{
+		case 1: SwitchToAssault(); break;
+		case 2: SwitchToLaser(); break;
+		case 3: SwitchToRocket(); break;
+	}
+}
+
+FSaveGameStruct AMyPlayer::GetDataForSave()
+{
+	FSaveGameStruct SaveData;
+	SaveData.Health = HealthPoints;
+
+	// TODO may be an additional variable ?
+	SaveData.CurrentWeapon = Inventory.CurrentWeapon == Inventory.AssaultRifle ? 1 :
+		Inventory.CurrentWeapon == Inventory.LaserRifle ? 2 :
+		Inventory.CurrentWeapon == Inventory.RocketLauncher ? 3 : 0;
+	
+	// TODO for each ? 
+	if (Inventory.AssaultRifle)
+	{
+		SaveData.AssaultRifle.WeaponClass = Inventory.AssaultRifle->GetClass();
+		SaveData.AssaultRifle.Ammo = Inventory.AssaultRifle->GetCurrentAmmo();
+	}
+
+	if (Inventory.LaserRifle)
+	{
+		SaveData.LaserRifle.WeaponClass = Inventory.LaserRifle->GetClass();
+		SaveData.LaserRifle.Ammo = Inventory.LaserRifle->GetCurrentAmmo();
+	}
+
+	if (Inventory.RocketLauncher)
+	{
+		SaveData.RocketLauncher.WeaponClass = Inventory.RocketLauncher->GetClass();
+		SaveData.RocketLauncher.Ammo = Inventory.RocketLauncher->GetCurrentAmmo();
+	}
+	
+	return SaveData;
+}
+
+void AMyPlayer::SpawnInventory(const FSaveGameStruct& SaveData)
+{
+
 }
 
 void AMyPlayer::Use()

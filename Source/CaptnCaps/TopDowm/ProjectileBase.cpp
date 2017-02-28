@@ -18,6 +18,13 @@ AProjectileBase::AProjectileBase()
 	TraceParams = FCollisionQueryParams(FName(TEXT("ProjectileTrace")), false, this);
 
 	InitialLifeSpan = 10.f;
+
+	RadialDamageParams.BaseDamage = 101.f;
+	RadialDamageParams.MinimumDamage = 11.f;
+	RadialDamageParams.DamageFalloff = 1.1f;
+	RadialDamageParams.InnerRadius = 101.f;
+	RadialDamageParams.OuterRadius = 501.f;
+	
 }
 
 // Called when the game starts or when spawned
@@ -79,6 +86,7 @@ void AProjectileBase::DealDamage(const FHitResult& Hit)
 				FVector Direction = NewHit.GetActor()->GetActorLocation() - RadialDamageEvent.Origin;
 				Direction.Normalize();
 				NewHit.GetComponent()->AddImpulse(Direction * ImpulsStrength, "", true);
+				;
 			}
 		}
 	}

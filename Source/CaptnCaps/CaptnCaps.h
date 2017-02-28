@@ -10,7 +10,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCaptnCaps, Log, All);
 
-UENUM(BlueprintType, Blueprintable)
+UENUM(BlueprintType)
 enum class EStencilColor : uint8
 {
 	SC_Green = 250 UMETA(DisplayName = "Green"),
@@ -19,7 +19,7 @@ enum class EStencilColor : uint8
 	SC_Orange = 253 UMETA(DisplayName = "Orange"),
 };
 
-UENUM(BlueprintType, Blueprintable)
+UENUM(BlueprintType)
 enum class EAmmoType : uint8
 {
 	AT_Bullets UMETA(DisplayName = "Bullets"),
@@ -27,7 +27,7 @@ enum class EAmmoType : uint8
 	SC_Lasers  UMETA(DisplayName = "Lasers"),
 };
 
-USTRUCT(BlueprintType, Blueprintable)
+USTRUCT(BlueprintType)
 struct FPlayerInventory
 {
 	GENERATED_USTRUCT_BODY()
@@ -46,3 +46,4 @@ struct FPlayerInventory
 };
 
 // #include "CaptnCaps.generated.h" ! ! ! - GENERATED_USTRUCT_BODY()
+

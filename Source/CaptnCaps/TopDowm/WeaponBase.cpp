@@ -16,7 +16,10 @@ void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurrentAmmo = MaxAmmo;
+	if (bSpawnFull)
+	{
+		CurrentAmmo = MaxAmmo;
+	}
 }
 
 void AWeaponBase::AddAmmo(int32 Amount)
@@ -187,4 +190,9 @@ void AWeaponBase::GetAmmo(int32& Current, int32& Max) const
 {
 	Current = CurrentAmmo;
 	Max = MaxAmmo;
+}
+
+void AWeaponBase::SetAmmo(int32 Ammo)
+{
+	CurrentAmmo = Ammo;
 }
