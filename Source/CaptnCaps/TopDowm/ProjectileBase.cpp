@@ -72,6 +72,12 @@ void AProjectileBase::DealDamage(const FHitResult& Hit)
 		if (NewHit.GetActor())
 		{
 			NewHit.GetActor()->TakeDamage(RadialDamageParams.BaseDamage, RadialDamageEvent, Instigator->GetController(), this);
+			if (NewHit.GetComponent())
+			{
+				FVector Direction = NewHit.GetActor()->GetActorLocation() - RadialDamageEvent.Origin;
+				Direction.Normalize();
+				NewHit.GetComponent()->AddImpulse(Direction * ImpulsStrength, "", true);
+			}
 		}
 	}
 }

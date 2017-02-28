@@ -76,6 +76,7 @@ void AMyPlayer::RotateCharacterTowardsMouseCursor()
 		PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
 		FRotator NewRotation = WorldDirection.Rotation();
 		SetActorRotation(FRotator(0.f, NewRotation.Yaw, 0.f));
+		Bearing = NewRotation.Yaw;
 	}
 }
 

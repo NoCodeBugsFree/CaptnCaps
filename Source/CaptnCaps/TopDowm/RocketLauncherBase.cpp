@@ -21,7 +21,12 @@ void ARocketLauncherBase::DoFire()
 			Projectile->Initialize(Rotation.Vector());
 			SpawnFireEffect();
 			CurrentAmmo--;
+
+			// Add Impulse to Player
+			if (OwningPlayer)
+			{
+				OwningPlayer->GetCharacterMovement()->AddImpulse( - GetActorForwardVector() * ImpulseStrength, true);
+			}
 		}
 	}
-
 }
