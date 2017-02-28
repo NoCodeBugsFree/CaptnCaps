@@ -51,6 +51,10 @@ public:
 	void StartFire();
 
 	void StopFire();
+
+	void SetHasKey(bool NewHasKey) { bHasKey = NewHasKey; }
+
+	FORCEINLINE bool IsPlayerHasKey() const { return bHasKey; }
 	
 private:
 
@@ -86,6 +90,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bIsRunning : 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	uint32 bHasKey : 1;
 
 
 	/** This is a AActor::TakeDamage() overriding

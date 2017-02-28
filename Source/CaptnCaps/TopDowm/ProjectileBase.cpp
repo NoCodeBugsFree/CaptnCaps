@@ -16,6 +16,8 @@ AProjectileBase::AProjectileBase()
 	ProjectileParticles->SetupAttachment(RootComponent);
 
 	TraceParams = FCollisionQueryParams(FName(TEXT("ProjectileTrace")), false, this);
+
+	InitialLifeSpan = 10.f;
 }
 
 // Called when the game starts or when spawned

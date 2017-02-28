@@ -37,12 +37,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	uint32 bIsTouchInteracts : 1;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	USphereComponent* CollisionSphere;
+
 private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	UMeshComponent* PickupMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	USphereComponent* CollisionSphere;
 	
 };

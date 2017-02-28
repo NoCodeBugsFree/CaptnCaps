@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "GameFramework/Actor.h"
+#include "PickupBase.h"
 #include "ExitKey.generated.h"
 
 UCLASS()
-class CAPTNCAPS_API AExitKey : public AActor
+class CAPTNCAPS_API AExitKey : public APickupBase
 {
 	GENERATED_BODY()
 	
@@ -20,6 +20,10 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	
+	virtual void OnInteract_Implementation(AActor* Caller) override;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 	
 };
