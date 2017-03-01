@@ -62,7 +62,6 @@ void AMyPlayer::BeginPlay()
 		HealthPoints = MaxHealthPoints;
 	}
 	
-	
 	HUDUpdateHP();
 }
 
@@ -87,6 +86,9 @@ void AMyPlayer::RotateCharacterTowardsMouseCursor()
 	if (PlayerController)
 	{
 		FVector WorldLocation, WorldDirection;
+
+		// bool APlayerController::DeprojectMousePositionToWorld(FVector & WorldLocation, FVector & WorldDirection)
+		// Convert current mouse 2D position to World Space 3D position and direction. Returns false if unable to determine value.
 		PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
 		FRotator NewRotation = WorldDirection.Rotation();
 		SetActorRotation(FRotator(0.f, NewRotation.Yaw, 0.f));
@@ -159,13 +161,17 @@ AInteractableActor* AMyPlayer::FindFocusedActor()
 	FRotator Rotation;
 	FHitResult Hit(ForceInit);
 
+	// virtual void GetPlayerViewPoint (FVector & Location, FRotator & Rotation)
+	// Returns Player's Point of View For the AI this means the Pawn's 'Eyes' ViewPoint 
+	// For a Human player, this means the Camera's ViewPoint
+	// out_Location, view location of player out_rotation, view rotation of player
 	Controller->GetPlayerViewPoint(Location, Rotation);
 
 	FVector Start = Location;
 	FVector End = Start + GetActorForwardVector() * InteractionDistance;
 
+	// race a ray against the world using a specific channel and return the first blocking hit
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Camera, TraceParams);
-	
 	
 	if (Hit.bBlockingHit)
 	{
@@ -295,6 +301,7 @@ void AMyPlayer::AddToInventory(AWeaponBase* NewWeapon)
 		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 		NewWeapon->SetActorHiddenInGame(true);
 
+		// generic functions required
 		if ( NewWeapon->IsA(AAssaultRifleBase::StaticClass()) )
 		{
 			if (Inventory.AssaultRifle)

@@ -69,6 +69,7 @@ void AExitDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 
 		TopDownSaveGame->SaveInfo = MyPlayer->GetDataForSave();
 
+		// Converts an FName to a readable format, in place
 		LevelToLoadName.ToString(TopDownSaveGame->SaveInfo.Level);
 
 		TopDownSaveGame->Save();

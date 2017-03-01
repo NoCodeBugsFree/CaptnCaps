@@ -36,7 +36,7 @@ protected:
 	UStaticMeshComponent* ProjectileMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	UParticleSystemComponent* ProjectileParticles;
+	UParticleSystemComponent* ProjectileTraceParticles;
 
 	FVector Velocity;
 
@@ -47,10 +47,10 @@ protected:
 	float ImpulsStrength = 1000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* ImpactFireEffect;
+	UParticleSystem* ImpactPointParticles;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	USoundBase* ImpactFireEffectSound;
+	USoundBase* ImpactPointSoundEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FRadialDamageParams RadialDamageParams;

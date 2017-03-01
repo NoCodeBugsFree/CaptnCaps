@@ -33,7 +33,7 @@ public:
 	void OnDeath();
 
 	void Heal(float Amount);
-
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "AAA")
 	void HUDUpdateHP();
 
@@ -43,6 +43,7 @@ public:
 
 	void EquipWeapon(class AWeaponBase* WeaponToEquip);
 
+	// TODO SwitchToNextInventoryItem(), SwithToPreviousInventoryItem();
 	void SwitchToAssault();
 
 	void SwitchToLaser();
@@ -138,8 +139,5 @@ private:
 
 	UFUNCTION()
 	void LookYaw(float Value);
-	
-public:
-
 	
 };

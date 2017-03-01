@@ -12,9 +12,9 @@ AProjectileBase::AProjectileBase()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	RootComponent = ProjectileMesh;
 
-	ProjectileParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Projectile Particles"));
-	ProjectileParticles->SetupAttachment(RootComponent);
-
+	ProjectileTraceParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Projectile Particles"));
+	ProjectileTraceParticles->SetupAttachment(RootComponent);
+	
 	TraceParams = FCollisionQueryParams(FName(TEXT("ProjectileTrace")), false, this);
 
 	InitialLifeSpan = 10.f;
@@ -24,7 +24,6 @@ AProjectileBase::AProjectileBase()
 	RadialDamageParams.DamageFalloff = 1.1f;
 	RadialDamageParams.InnerRadius = 101.f;
 	RadialDamageParams.OuterRadius = 501.f;
-	
 }
 
 // Called when the game starts or when spawned
@@ -86,7 +85,6 @@ void AProjectileBase::DealDamage(const FHitResult& Hit)
 				FVector Direction = NewHit.GetActor()->GetActorLocation() - RadialDamageEvent.Origin;
 				Direction.Normalize();
 				NewHit.GetComponent()->AddImpulse(Direction * ImpulsStrength, "", true);
-				;
 			}
 		}
 	}
@@ -97,14 +95,14 @@ void AProjectileBase::SpawnImpactEffect(const FHitResult& Hit)
 	FVector ImpactLocation = Hit.ImpactPoint;
 	FRotator ImpactRotation = Hit.ImpactNormal.Rotation();
 
-	if (ImpactFireEffect)
+	if (ImpactPointParticles)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactFireEffect, ImpactLocation, ImpactRotation, true);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactPointParticles, ImpactLocation, ImpactRotation, true);
 	}
 
-	if (ImpactFireEffectSound)
+	if (ImpactPointSoundEffect)
 	{
-		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactFireEffectSound, ImpactLocation, ImpactRotation);
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactPointSoundEffect, ImpactLocation, ImpactRotation);
 	}
 }
 

@@ -26,5 +26,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float ImpulseStrength = 1000.f;
 	
-	
 };

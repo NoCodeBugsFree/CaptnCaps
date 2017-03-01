@@ -13,9 +13,9 @@ AInteractableActor::AInteractableActor()
 	SphereCollision->SetupAttachment(RootComponent);
 	SphereCollision->SetSphereRadius(250.f);
 
+	// TODO AActor::PostInitializeComponents ?
 	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AInteractableActor::OnOverlapBegin);
 	SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AInteractableActor::OnOverlapEnd);
-
 }
 
 void AInteractableActor::BeginPlay()
@@ -74,7 +74,6 @@ void AInteractableActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 	{
 		OnBeginFocus();
 	}
-	
 }
 
 void AInteractableActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
