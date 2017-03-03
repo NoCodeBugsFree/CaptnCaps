@@ -19,6 +19,7 @@ enum class EStencilColor : uint8
 	SC_Orange = 253 UMETA(DisplayName = "Orange"),
 };
 
+
 UENUM(BlueprintType)
 enum class EAmmoType : uint8
 {
@@ -26,6 +27,7 @@ enum class EAmmoType : uint8
 	SC_Rockets UMETA(DisplayName = "Rockets"),
 	SC_Lasers  UMETA(DisplayName = "Lasers"),
 };
+
 
 USTRUCT(BlueprintType)
 struct FPlayerInventory
@@ -45,5 +47,35 @@ struct FPlayerInventory
 	class ARocketLauncherBase* RocketLauncher;
 };
 
-// #include "CaptnCaps.generated.h" ! ! ! - GENERATED_USTRUCT_BODY()
+
+USTRUCT(BlueprintType)
+struct FSpawnInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	TSubclassOf<class AWaveEnemy> EnemyClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	int32 MaxEnemiesAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	float Probability;
+	
+};
+
+
+USTRUCT(BlueprintType)
+struct FWaveInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	int32 TotalNumberOfEnemies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	TArray<FSpawnInfo> SpawnInfo;
+
+};
+
 
