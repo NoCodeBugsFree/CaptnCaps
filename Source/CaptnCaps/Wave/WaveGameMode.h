@@ -21,7 +21,6 @@ public:
 
 	void InitializeTaggedSpawnPoints();
 
-
 	virtual void Killed(AController* Killer, AController* Victim);
 
 	UFUNCTION(BlueprintCallable, Category = "AAA")
@@ -33,7 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void SetWaveInfo(const TArray<FWaveInfo>& NewWaveInfo) { WaveInfo = NewWaveInfo; }
 
-
+	void UpdateHUD();
 
 protected:
 
@@ -67,7 +66,7 @@ protected:
 private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AAA")
-	FName SpawnTag;
+	FName SpawnTag = "AI";
 
 	UPROPERTY(EditDefaultsOnly, Category = "AAA")
 	float WaveDelay;

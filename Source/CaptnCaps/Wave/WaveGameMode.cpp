@@ -6,6 +6,7 @@
 #include "WaveGameState.h"
 #include "WavePlayerState.h"
 #include "WaveInteractableActor.h"
+#include "WavePlayer.h"
 
 AWaveGameMode::AWaveGameMode()
 {
@@ -30,6 +31,7 @@ void AWaveGameMode::BeginPlay()
 
 	InitializeTaggedSpawnPoints();
 
+	UpdateHUD();
 }
 
 void AWaveGameMode::InitializeTaggedSpawnPoints()
@@ -58,18 +60,34 @@ void AWaveGameMode::Killed(AController* Killer, AController* Victim)
 		if (WaveGameState)
 		{
 			WaveGameState->AddEnemiesRemaining(-1);
+			UpdateHUD();
 		}
 	}
 
 	AWavePlayerState* WavePlayerState = Cast<AWavePlayerState>(Killer->PlayerState);
 	if (WavePlayerState)
 	{
-		WavePlayerState->AddMoney(10); // TODO valid number
+		WavePlayerState->AddMoney(VictimPawn->GetMoneyReward());
+		UpdateHUD();
 	}
 
 	if (WaveGameState && WaveGameState->GetEnemiesRemaining() <= 0)
 	{
 		EndWave();
+	}
+}
+
+void AWaveGameMode::UpdateHUD()
+{
+	TArray<AActor*> Players;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWavePlayer::StaticClass(), Players);
+	for (AActor* Player : Players)
+	{
+		AWavePlayer* WavePlayer = Cast<AWavePlayer>(Player);
+		if (WavePlayer && WavePlayer->IsPlayerControlled())
+		{
+			WavePlayer->UpdateHUD();
+		}
 	}
 }
 
@@ -87,8 +105,10 @@ void AWaveGameMode::BeginWave()
 	{
 		WaveGameState->SetIsWaveActive(true);
 		WaveGameState->SetCurrentWave(WaveGameState->GetCurrentWave() + 1);
+		UpdateHUD();
 		BeginSpawning();
 	}
+	
 }
 
 void AWaveGameMode::EndWave()
@@ -96,6 +116,7 @@ void AWaveGameMode::EndWave()
 	if (WaveGameState)
 	{
 		WaveGameState->SetIsWaveActive(false);
+		UpdateHUD();
 		if (WaveGameState->GetCurrentWave() >= MaxWaves)
 		{
 			EndMatch();
@@ -196,6 +217,7 @@ void AWaveGameMode::SpawnEnemy()
 			}
 		}
 	}
+	UpdateHUD();
 }
 
 void AWaveGameMode::StartMatch()
@@ -207,12 +229,14 @@ void AWaveGameMode::StartMatch()
 	}
 
 	Super::StartMatch();
+	UpdateHUD();
 }
 
 void AWaveGameMode::EndMatch()
 {
 	Super::EndMatch();
 	UE_LOG(LogTemp, Error, TEXT("You won the match"));
+	UpdateHUD();
 }
 
 

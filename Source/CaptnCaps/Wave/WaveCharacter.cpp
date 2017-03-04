@@ -23,18 +23,29 @@ AWaveCharacter::AWaveCharacter()
 	bIsInFPS = true;
 	bAllowInput = true;
 	bCrouched = false;
-	bCanInteract = false;
+	bCanInteract = true;
 	
 	TraceParams = FCollisionQueryParams(FName(TEXT("Trace")), false, this);
 
 	// GetCapsuleComponent()->InitCapsuleSize(DefaultCapsuleRadius, DefaultCapsuleHalfHeight);
+
+	DefaultCapsuleHalfHeight = 88.f;
+	DefaultCapsuleRadius = 34.f;
+	CrouchedCapsuleHalfHeight = 44.f;
+	CrouchedCapsuleRadius = 34.f;
+	StandingSpeedCoeff = 1.f;
+	CrouchedSpeedCoeff = 0.5f;
+
+	HeadSocketName = "HeadSocket";
+	InteractionDistance = 300.f;
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void AWaveCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpeedCorff = StandingSpeedCoeff;
+	SpeedCoeff = StandingSpeedCoeff;
 }
 
 void AWaveCharacter::Tick(float DeltaSeconds)
@@ -137,7 +148,7 @@ void AWaveCharacter::MoveForward(float Value)
 	{
 		FRotator Rotation(0.f, GetControlRotation().Yaw, 0.f);
 		FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
-		AddMovementInput(Direction, SpeedCorff * Value);
+		AddMovementInput(Direction, SpeedCoeff * Value);
 	}
 }
 
@@ -147,7 +158,7 @@ void AWaveCharacter::MoveRight(float Value)
 	{
 		FRotator Rotation(0.f, GetControlRotation().Yaw, 0.f);
 		FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
-		AddMovementInput(Direction, SpeedCorff * Value);
+		AddMovementInput(Direction, SpeedCoeff * Value);
 	}
 }
 
@@ -213,7 +224,7 @@ void AWaveCharacter::EnterCrouch()
 	CameraBoom->AddRelativeLocation(Offset);
 
 	GetMesh()->AddRelativeLocation(FVector(0,0, DefaultCapsuleHalfHeight - CrouchedCapsuleHalfHeight));
-	SpeedCorff = CrouchedSpeedCoeff;
+	SpeedCoeff = CrouchedSpeedCoeff;
 }
 
 void AWaveCharacter::ExitCrouch()
@@ -236,7 +247,7 @@ void AWaveCharacter::ExitCrouch()
 		CameraBoom->AddRelativeLocation(ReverseOffset);
 
 		GetMesh()->AddRelativeLocation(FVector(0,0, CrouchedCapsuleHalfHeight - DefaultCapsuleHalfHeight));
-		SpeedCorff = StandingSpeedCoeff;
+		SpeedCoeff = StandingSpeedCoeff;
 	}
 }
 

@@ -31,7 +31,7 @@ public:
 
 	// HUD
 	UFUNCTION(BlueprintCallable, Category = "AAA")
-	bool IsWaveActive()const { return bIsActive; }
+	bool IsWaveActive() const { return bIsActive; }
 
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	int32 GetEnemiesRemaining() const { return EnemiesRemaining; }
@@ -45,7 +45,7 @@ public:
 	// cpp only
 	int32 GetMaxWaves() const { return MaxWaves; }
 
-	int32 GetCurrentWave()const { return CurrentWave; }
+	int32 GetCurrentWave() const { return CurrentWave; }
 
 protected:
 

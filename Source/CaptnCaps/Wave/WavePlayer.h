@@ -15,7 +15,11 @@ class CAPTNCAPS_API AWavePlayer : public AWaveCharacter
 	
 public:
 
+	UFUNCTION(Client, Reliable)
+	void UpdateHUD();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "AAA")
+	void BP_UpdateHUD();
 
 protected:
 

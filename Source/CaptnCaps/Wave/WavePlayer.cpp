@@ -3,6 +3,7 @@
 #include "CaptnCaps.h"
 #include "WavePlayer.h"
 
-
-
-
+void AWavePlayer::UpdateHUD_Implementation()
+{
+	BP_UpdateHUD();
+}

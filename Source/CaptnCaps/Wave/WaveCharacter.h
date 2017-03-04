@@ -29,17 +29,12 @@ public:
 	// Allow actors to initialize themselves on the C++ side
 	virtual void PostInitializeComponents() override;
 
-	/**   */
 	virtual void OnInteract_Implementation(AActor* Caller) override;
 
-
 	// INTERACTION
-	/**   */
 	AActor* GetFocusedActor();
 	
-	/**   */
 	void HandleFocus();
-
 
 	// INPUT
 	void MoveForward(float Value);
@@ -79,7 +74,7 @@ private:
 
 	float Pitch;
 
-	float SpeedCorff;
+	float SpeedCoeff;
 
 	class AWaveInteractableActor* FocusedActor;
 

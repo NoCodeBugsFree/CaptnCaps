@@ -15,7 +15,7 @@ class CAPTNCAPS_API AWaveShop : public AWaveInteractableActor
 	
 public:
 
-
+	virtual void OnInteract_Implementation(AActor* Caller) override;
 
 protected:
 

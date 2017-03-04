@@ -13,7 +13,16 @@ class CAPTNCAPS_API AWaveEnemy : public AWaveInteractableCharacter
 {
 	GENERATED_BODY()
 	
+public:
+
 	
+	virtual void OnInteract_Implementation(AActor* Caller) override;
+
+protected:
+
+
+
+private:
 	
 	
 };
